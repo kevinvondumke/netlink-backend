@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../services/jwt.service";
+import { COOKIE_NAME } from "../utils/cookies";
 import { UnauthorizedError } from "../utils/errors";
 
 // INTERFACE FOR AUTH REQUEST
@@ -12,19 +13,11 @@ export interface AuthRequest extends Request {
 
 // AUTH MIDDLEWARE TO PROTECT ROUTES.
 export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
-    // GET AUTH HEADER
-    const authHeader = req.headers.authorization;
 
-    // CHECK FOR BEARER TOKEN IN THE AUTHORIZATION HEADER
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return next(new UnauthorizedError('Authorization Header Missing or Invalid.'));
-    }
-
-    // EXTRACT TOKEN FROM HEADER.
-    const token = authHeader.split(' ')[1];
+    const token = req.cookies[COOKIE_NAME];
 
     if (!token) {
-        return next(new UnauthorizedError('Authorization Token Invalid or Missing.'));
+        return next(new UnauthorizedError('Authentication cookie missing.'));
     }
 
     try {

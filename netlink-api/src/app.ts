@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { registerRoutes } from './routes';
 import { errorHandler } from './middleware/error';
 import { apiRateLimiter } from './middleware/rate-limit';
@@ -46,6 +47,7 @@ export const createApp = () => {
     );
     
     app.use(express.json());
+    app.use(cookieParser());
 
     // EXPRESS TEST ROUTE
     app.get('/health', (req: Request, res: Response) => {
