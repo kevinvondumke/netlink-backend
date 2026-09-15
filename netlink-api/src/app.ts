@@ -1,14 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import healthRouter from './routes/health';
 import { registerRoutes } from './routes';
 import { errorHandler } from './middleware/error';
 import { apiRateLimiter } from './middleware/rate-limit';
 import { NotFoundError } from './utils/errors';
-
-dotenv.config();
 
 export const createApp = () => {
     const app = express();
@@ -49,16 +47,10 @@ export const createApp = () => {
     app.use(express.json());
     app.use(cookieParser());
 
-    // EXPRESS TEST ROUTE
-    app.get('/health', (req: Request, res: Response) => {
-        res.json({
-            status: 'OK',
-            message: 'APP SERVER CONNECTION SUCCESS',
-            timestamp: new Date().toISOString()
-        });
-    });
+    // HEALTH AND READINESS ROUTES
+    app.use(healthRouter);
 
-    // REGISTER ROUTES
+    // APPLICATION ROUTES
     app.use(apiRateLimiter);
     registerRoutes(app);
 
