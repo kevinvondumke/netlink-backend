@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  validate-and-build:
+    name: Node ${{ matrix.node-version }} - Lint, Typecheck, Test and Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    defaults:
+      run:
+        working-directory: netlink-api
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: netlink-api/package-lock.json
+
+      - name: Install Dependencies (Clean)
+        run: npm ci
+
+      - name: Run TypeScript Typecheck
+        run: npm run typecheck
+
+      - name: Run Automated Test Suites
+        run: npm test
+        env:
+          NODE_ENV: test
+          PORT: 4400
+          DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/netlink_ci_test"
+          JWT_SECRET: "ci_jwt_secret"
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Verify Build Artifacts
+        run: |
+          test -f dist/src/server.js || { echo "--> Missing dist/src/server.js!"; exit 1; }
+          echo "--> Prod build artifact verified successfully!. :)"
