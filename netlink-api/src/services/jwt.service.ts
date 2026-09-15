@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env';
 
 // JWT SECRET KEY AND TOKEN EXPIRATION TIME.
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+const JWT_SECRET = env.JWT_SECRET;
 const JWT_EXPIRES_IN = '1h';
 
 // STRUCTURE OF THE JWT PAYLOAD.
