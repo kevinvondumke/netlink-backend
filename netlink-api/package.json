@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc && prisma generate",
     "start": "node dist/src/server.js",
-    "test": "ts-node src/utils/test-error-handling.ts && ts-node src/utils/test-validation.ts && ts-node src/utils/test-auth-cookies.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "ts-node src/utils/test-error-handling.ts && ts-node src/utils/test-validation.ts && ts-node src/utils/test-auth-cookies.ts && ts-node src/utils/test-env-validation.ts && ts-node src/utils/test-health-checks.ts",
     "postinstall": "prisma generate"
   },
   "keywords": [],
