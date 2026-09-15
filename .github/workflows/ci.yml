@@ -31,6 +31,8 @@ jobs:
           cache-dependency-path: netlink-api/package-lock.json
 
       - name: Install Dependencies (Clean)
+        env:
+          DATABASE_URL: "******localhost:5432/netlink_ci_test"
         run: npm ci
 
       - name: Run TypeScript Typecheck
@@ -45,6 +47,8 @@ jobs:
           JWT_SECRET: "ci_jwt_secret"
 
       - name: Build Application
+        env:
+          DATABASE_URL: "******localhost:5432/netlink_ci_test"
         run: npm run build
 
       - name: Verify Build Artifacts
