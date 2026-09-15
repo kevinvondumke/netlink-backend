@@ -12,7 +12,7 @@ REST API for the Netlink social platform. Built with Node.js, Express 5, TypeScr
 ---
 
 ## Project Structure
-`	ext
+<pre>
 netlink-api/
 ├── src/
 │   ├── config/          # Prisma client & database configuration
@@ -24,7 +24,7 @@ netlink-api/
 │   ├── utils/           # AppError hierarchy, cookie helpers & automated test suites
 │   ├── app.ts           # Express application setup
 │   └── server.ts        # Server entry point
-`
+</pre>
 
 ---
 
@@ -32,7 +32,7 @@ netlink-api/
 
 Netlink implements **HttpOnly Cookie Authentication** to protect JWTs against Cross-Site Scripting (XSS) token exfiltration attacks.
 
-`	ext
+<pre>
   [Browser / Vue Client]                      [Express API Server]
             │                                           │
             ├─────── POST /auth/login (credentials) ───►│
@@ -50,7 +50,7 @@ Netlink implements **HttpOnly Cookie Authentication** to protect JWTs against Cr
             │                                           │
             ├─────── POST /auth/logout ────────────────►│
             │◄────── 200 OK + Clear-Cookie ─────────────┤ res.clearCookie('auth_token')
-`
+</pre>
 
 ### 1. Security Attributes Breakdown
 - **httpOnly: true**: Blocks client-side JavaScript (document.cookie) from reading the cookie, eliminating direct token exfiltration via XSS.
@@ -73,7 +73,7 @@ Cross-origin cookie delivery requires explicit mutual configuration:
 
 Netlink implements a declarative **Zod Validation & Type-Inference Architecture** acting as the single source of truth across the API boundary.
 
-`	ext
+<pre>
   [HTTP Request with Body]
              │
              ▼
@@ -93,10 +93,11 @@ Netlink implements a declarative **Zod Validation & Type-Inference Architecture*
              │
              ▼
   4. Service / Prisma (Database Operations)
-`
+</pre>
 
 ### 1. Schemas & Inferred Types (src/schemas/)
-- **egisterSchema & RegisterInput (src/schemas/auth.schema.ts)**:
+- **
+egisterSchema & RegisterInput (src/schemas/auth.schema.ts)**:
   - Enforces email format, name character bounds (/^[A-Za-zÀ-ÿ ]{2,40}$/), and strict password complexity (min 8 chars, uppercase, lowercase, numbers, symbols).
   - Exports compile-time TypeScript type: export type RegisterInput = z.infer<typeof registerSchema>;
 - **loginSchema & LoginInput (src/schemas/auth.schema.ts)**:
@@ -109,14 +110,17 @@ Netlink implements a declarative **Zod Validation & Type-Inference Architecture*
 
 ### 2. Validation Middleware (alidateRequest)
 Located at src/middleware/validate.ts:
-- Validates eq.body using schema.safeParse().
-- **On Success:** Replaces eq.body with parsed, trimmed, and default-applied data, then invokes 
+- Validates 
+eq.body using schema.safeParse().
+- **On Success:** Replaces 
+eq.body with parsed, trimmed, and default-applied data, then invokes 
 ext(). Mass assignment attacks are prevented as unknown fields are automatically stripped.
 - **On Failure:** Formats structured field-level errors ([{ field, message }]) and passes a BadRequestError (400) directly into the centralized error handler.
 
 ### 3. Route Integration
 Validation middleware is mounted at the route boundary across all body-accepting endpoints:
-- POST /auth/register $\rightarrow$ uthRateLimiter, alidateRequest(registerSchema), egister
+- POST /auth/register $\rightarrow$ uthRateLimiter, alidateRequest(registerSchema), 
+egister
 - POST /auth/login $\rightarrow$ uthRateLimiter, alidateRequest(loginSchema), login
 - POST /posts/ $\rightarrow$ uthenticate, alidateRequest(createPostSchema), createPost
 
@@ -137,8 +141,8 @@ Powered by a custom AppError class hierarchy and a 4-parameter Express 5 error m
 - **Programmer Errors:** Unexpected system bugs (e.g. TypeError, database connection loss). Logged with full stack traces in server logs, but sanitized to safe 500 Internal Server Error responses in production.
 
 ### 2. Standardized Error Response Format
-
-`json
+<pre>
+json
 {
   "status": "fail",
   "error": "Email: Invalid email address format.",
@@ -149,7 +153,7 @@ Powered by a custom AppError class hierarchy and a 4-parameter Express 5 error m
     }
   ]
 }
-`
+</pre>
 
 - In **Development Mode** (NODE_ENV !== 'production'), error responses include full debugging details (statusCode, stack, and raw details).
 - In **Production Mode** (NODE_ENV === 'production'), stack traces are completely stripped and unexpected internal errors are sanitized.
@@ -165,22 +169,21 @@ The centralized error middleware automatically intercepts and converts:
 
 ## Setup & Running
 
-`ash
-# Install dependencies
-npm install
+> Bash
+#### Install dependencies
+<code>$ npm install</code>
 
-# Start development server with hot-reload
-npm run dev
+#### Start development server with hot-reload
+<code>$ npm run dev</code>
 
-# Run automated test suites (Error Handling + Zod Validation + Auth Cookies)
-npm test
+#### Run automated test suites (Error Handling + Zod Validation + Auth Cookies)
+<code>$ npm test</code>
 
-# Build for production
-npm run build
+#### Build for production
+<code>$ npm run build</code>
 
-# Start production server
-npm start
-`
+#### Start production server
+<code>$ npm start</code>
 
 ---
 
@@ -188,12 +191,12 @@ npm start
 Create a .env file in 
 etlink-api/:
 
-`env
+<pre>
 DATABASE_URL="postgresql://..."
 JWT_SECRET="your-secure-jwt-secret"
 CORS_ORIGIN="http://localhost:5173"
 NODE_ENV="development"
-`
+</pre>
 
 ---
 
