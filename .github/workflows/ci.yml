@@ -1,4 +1,4 @@
-name: CI
+name: Netlink Backend CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate-and-build:
-    name: Node ${{ matrix.node-version }} - Lint, Typecheck, Test and Build
+    name: Node ${{ matrix.node-version }} - Typecheck, Test and Build
     runs-on: ubuntu-latest
 
     strategy:
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Dependencies (Clean)
         env:
-          DATABASE_URL: "******localhost:5432/netlink_ci_test"
+          DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/netlink_ci_test"
         run: npm ci
 
       - name: Run TypeScript Typecheck
@@ -48,7 +48,7 @@ jobs:
 
       - name: Build Application
         env:
-          DATABASE_URL: "******localhost:5432/netlink_ci_test"
+          DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/netlink_ci_test"
         run: npm run build
 
       - name: Verify Build Artifacts
