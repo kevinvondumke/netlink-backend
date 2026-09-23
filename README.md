@@ -1,6 +1,9 @@
 ﻿# NETLINK — Backend
 REST API for the Netlink social platform. Built with Node.js, Express 5, TypeScript, Prisma, and PostgreSQL.
 
+## Status
+[![Netlink Backend CI](https://github.com/kevinvondumke/netlink-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/kevinvondumke/netlink-backend/actions/workflows/ci.yml)
+
 ## Tech Stack
 - **Runtime & Framework:** Node.js & Express.js (v5)
 - **Language:** TypeScript
