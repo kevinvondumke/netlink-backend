@@ -8,7 +8,9 @@
     "build": "tsc && prisma generate",
     "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit",
-    "test": "ts-node src/utils/test-error-handling.ts && ts-node src/utils/test-validation.ts && ts-node src/utils/test-auth-cookies.ts && ts-node src/utils/test-env-validation.ts && ts-node src/utils/test-health-checks.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:legacy": "ts-node src/utils/test-error-handling.ts && ts-node src/utils/test-validation.ts && ts-node src/utils/test-auth-cookies.ts && ts-node src/utils/test-env-validation.ts && ts-node src/utils/test-health-checks.ts",
     "postinstall": "prisma generate"
   },
   "keywords": [],
@@ -21,26 +23,27 @@
     "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
-    "helmet": "^8.3.0",
-    "jest": "^30.2.0",
-    "jsonwebtoken": "^9.0.3",
     "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
     "rate-limit-redis": "^6.0.1",
     "redis": "^6.2.1",
-    "zod": "^3.24.2",
-    "cookie-parser": "^1.4.7"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.2.1",
+    "@types/supertest": "^7.2.1",
     "prisma": "^7.5.0",
+    "supertest": "^7.3.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.2"
   }
 }

@@ -11,6 +11,7 @@ import { NotFoundError } from './utils/errors';
 export const createApp = () => {
     const app = express();
 
+    // SECURITY MIDDLEWARE
     app.use(
         helmet({
             // HTTP STRICT TRANSPORT SECURITY (HSTS)
@@ -42,24 +43,25 @@ export const createApp = () => {
             ],
             credentials: true
         })
-    );
-    
+    ); 
+
+    // JSON PARSER AND COOKIE PARSER MIDDLEWARE
     app.use(express.json());
     app.use(cookieParser());
 
-    // HEALTH AND READINESS ROUTES
+    // HEALTH ROUTES
     app.use(healthRouter);
 
     // APPLICATION ROUTES
     app.use(apiRateLimiter);
     registerRoutes(app);
 
-    // 404 HANDLER (for unmatched routes)
+    // 404 HANDLER
     app.use((req: Request, res: Response, next: NextFunction) => {
         next(new NotFoundError(`Cannot find ${req.method} ${req.originalUrl} on this server.`));
     });
 
-    // ERROR HANDLER (must be after all routes and middleware)
+    // ERROR HANDLER
     app.use(errorHandler);
 
     return app;
