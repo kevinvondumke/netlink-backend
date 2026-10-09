@@ -204,11 +204,37 @@ The centralized error middleware automatically intercepts and converts:
 - `GET /health` → `200 OK` (Process Alive)
 - `GET /ready` → `200 OK` (Database Connected)
 
-### Automated Test Suites
-Run all automated test suites (Error Handling + Zod Validation + Auth Cookies + Env Validation + Health Checks):
+### Automated Integration & Unit Test Suites
+Netlink features fully automated database-backed integration tests executing against an isolated local PostgreSQL database (`netlink_test`) using Vitest & Supertest.
+
+#### Integration Test Environment Setup
+1. Create your local test database:
+   ```bash
+   createdb netlink_test
+   ```
+2. Configure `.env.test` with your test connection:
+   ```env
+   NODE_ENV=test
+   PORT=4401
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/netlink_test"
+   JWT_SECRET="test_jwt_secret_key_minimum_10_chars_long"
+   ```
+3. Deploy migrations to the test database:
+   ```bash
+   # Deploy schema migrations to netlink_test
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/netlink_test" npx prisma migrate deploy
+   ```
+
+#### Running Tests
 ```bash
+# Run all integration test suites (Smoke + Auth + User Management + DB Isolation)
 npm test
+
+# Run tests in watch mode during active development
+npm run test:watch
 ```
+
+> **Safety Barrier:** All test database resets are guarded by `assertTestDatabase()` in `src/__tests__/helpers/db-guard.ts`. Destructive table resets will immediately abort if `NODE_ENV !== 'test'` or if `DATABASE_URL` does not explicitly target an isolated test database.
 
 ### Typecheck & Production Build
 ```bash

@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import { z } from 'zod';
 
 // LOAD .ENV ONCE <- PARSING ENV VARIABLES
-dotenv.config();
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+dotenv.config({ path: envFile });
 
 // DEF ENV SCHEMA
 export const envSchema = z.object({
