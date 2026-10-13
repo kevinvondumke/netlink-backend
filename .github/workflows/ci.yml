@@ -10,6 +10,20 @@ jobs:
   validate-and-build:
     name: Node ${{ matrix.node-version }} - Typecheck, Test and Build
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: netlink_ci_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     strategy:
       matrix:
@@ -37,6 +51,11 @@ jobs:
 
       - name: Run TypeScript Typecheck
         run: npm run typecheck
+
+      - name: Deploy Prisma Migrations to CI Database
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/netlink_ci_test"
 
       - name: Run Automated Test Suites
         run: npm test
