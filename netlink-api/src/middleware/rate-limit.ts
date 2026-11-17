@@ -42,7 +42,7 @@ const apiStore = createStore(15 * 60 * 1000, 'netlink:ratelimit:api');
 export const authRateLimiter: RateLimitRequestHandler = rateLimit({
     ...commonOptions,
     windowMs: 15 * 60 * 1000,
-    limit: 10,
+    limit: process.env.NODE_ENV === 'production' ? 10 : 1000,
     message: { error: 'Too many authentication attempts. Please try again later.' },
     ...(authStore ? { store: authStore } : {}),
 });
